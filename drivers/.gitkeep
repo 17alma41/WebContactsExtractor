@@ -1,0 +1,8 @@
+Instalar chromedriver desde el siguiente enlace:
+
+# Comprobar version
+https://googlechromelabs.github.io/chrome-for-testing/#stable
+
+# Descarga directa (version 135.)
+https://storage.googleapis.com/chrome-for-testing-public/135.0.7049.114/win64/chromedriver-win64.zip
+

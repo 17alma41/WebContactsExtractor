@@ -1,0 +1,10 @@
+pandas
+requests
+beautifulsoup4
+selenium
+webdriver-manager
+XlsxWriter
+pyisemail
+dnspython
+openpyxl
+psutil
