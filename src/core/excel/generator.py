@@ -48,18 +48,27 @@ def generar_excel(df_resultado: pd.DataFrame, nombre_archivo: str, carpeta_salid
         # Hoja principal de datos
         df_resultado.to_excel(writer, sheet_name="data", index=False)
         
-        # Configurar autofilter
+        # Configurar autofilter y asegurar que se mantiene el orden de columnas
         try:
             worksheet = writer.sheets["data"]
             last_col = len(df_resultado.columns)
             if last_col > 0:
-                last_letter = chr(ord('A') + last_col - 1)
-                # Verificar si el objeto worksheet tiene el método autofilter
-                if hasattr(worksheet, 'autofilter'):
-                    worksheet.autofilter(f"A1:{last_letter}1")
+                # Calcular la última columna (maneja más de 26 columnas correctamente)
+                if last_col <= 26:
+                    last_letter = chr(ord('A') + last_col - 1)
                 else:
-                    # Alternativa usando openpyxl directamente
-                    worksheet.auto_filter.ref = f"A1:{last_letter}{len(df_resultado)+1}"
+                    # Para más de 26 columnas (AA, AB, etc.)
+                    first_char = chr(ord('A') + ((last_col - 1) // 26) - 1)
+                    second_char = chr(ord('A') + ((last_col - 1) % 26))
+                    last_letter = f"{first_char}{second_char}"
+                
+                # Aplicar autofilter a toda la tabla
+                worksheet.auto_filter.ref = f"A1:{last_letter}{len(df_resultado)+1}"
+                
+                # Congelar la primera fila para facilitar navegación
+                worksheet.freeze_panes = 'A2'
+                
+                print(f"✅ Autofilter aplicado a la hoja 'data'")
         except Exception as e:
             print(f"\n⚠️ Advertencia al configurar autofilter: {e}")
             # Continuar sin interrumpir el proceso
